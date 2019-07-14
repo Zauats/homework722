@@ -30,9 +30,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void call(View view){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED){
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CALL_PHONE}, 100);
-        else{
+            if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED)) {
+                uri = Uri.parse("tel:" + phone.getText().toString());
+                newCall = new Intent(Intent.ACTION_CALL, uri);
+                startActivity(newCall);
+            }
+        }else{
             uri = Uri.parse("tel:" + phone.getText().toString());
             newCall = new Intent(Intent.ACTION_CALL, uri);
             startActivity(newCall);
@@ -40,14 +45,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendMessage(View view){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED){
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.SEND_SMS}, 101);
+            if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED)){
+                SmsManager smgr = SmsManager.getDefault();
+                uri = Uri.parse("tel:" + phone.getText().toString());
+                smgr.sendTextMessage(phone.getText().toString(),null,message.getText().toString(),null,null);
+            }
+        }
         else{
             SmsManager smgr = SmsManager.getDefault();
             uri = Uri.parse("tel:" + phone.getText().toString());
             smgr.sendTextMessage(phone.getText().toString(),null,message.getText().toString(),null,null);
         }
     }
+
+
 
 
 }
